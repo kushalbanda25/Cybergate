@@ -36,3 +36,4 @@ Refresh CyberGate. The top-right status pill should turn **Green** and say "Clou
 - **Frontend:** HTML5, Premium Vanilla CSS (Glassmorphism), JavaScript (ES6+).
 - **Security:** Real-time Fetch API status monitoring for WAF detection.
 - **Design:** Cyber-industrial aesthetic with dark-mode optimization.
+"# Cybergate" 
