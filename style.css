@@ -34,6 +34,29 @@ header h1 {
     font-weight: bold;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.status-badges {
+    display: flex;
+    gap: 15px;
+}
+
+.badge {
+    font-size: 13px;
+    color: #444444;
+    font-weight: 500;
+}
+
+.status-active {
+    color: #008800;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
 /* --- Main Content Area --- */
 main {
     max-width: 800px;
