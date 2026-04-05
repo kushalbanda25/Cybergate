@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Cyber Gate — Security Analysis Platform. Demonstrates XSS, SQL Injection, Path Traversal, Command Injection, LFI, and XXE detection with real-time IDS analysis." />
+    <title>Cyber Gate – Security Analysis Platform</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- TARGET SETUP PAGE: Configure the simulated application -->
+    <div id="login-page">
+        <h1 class="cyber-gate-title">CYBER GATE</h1>
+        <div class="login-box">
+            <h2>Configure Target Application</h2>
+            <p class="subtitle">Set up the simulated login form that the IDS will protect</p>
+
+            <div class="form-group">
+                <label for="email">Target Username / Email</label>
+                <input type="text" id="email" placeholder="e.g. admin@webapp.com" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Target Password</label>
+                <input type="text" id="password" placeholder="e.g. MyP@ssw0rd" />
+            </div>
+
+            <button onclick="handleLogin()">Launch Simulation →</button>
+
+            <p id="login-error" class="error-msg" style="display:none;">
+                Please configure both fields.
+            </p>
+        </div>
+    </div>
+
+    <!-- MAIN APP: hidden until target is configured -->
+    <div id="main-page" style="display:none;">
+
+        <header>
+            <h1>Security Analysis Platform</h1>
+            <div class="header-actions">
+                <button id="logout-btn" onclick="handleLogout()">Logout</button>
+            </div>
+        </header>
+
+        <main>
+
+            <!-- SECTION 1: Target Field Selector -->
+            <section>
+                <h3>1. Select Target Field</h3>
+                <p class="hint-text">
+                    ⚠ Username field only accepts safe input.
+                    Attacks will be blocked on Username — use Password for attack simulation.
+                </p>
+                <div class="button-row">
+                    <button id="btn-username" class="toggle-btn" onclick="setTarget('username')">
+                        Username
+                    </button>
+                    <button id="btn-password" class="toggle-btn active" onclick="setTarget('password')">
+                        Password
+                    </button>
+                </div>
+
+                <!-- Preview of the simulated login form being attacked -->
+                <div class="sim-form">
+                    <p class="sim-label">Target Application (Simulated Login Form)</p>
+                    <input type="text" id="sim-username" placeholder="Username field" readonly />
+                    <input type="text" id="sim-password" placeholder="Type attack here or select from below..." />
+                </div>
+            </section>
+
+            <!-- SECTION 2: Attack Type Selector -->
+            <section>
+                <h3>2. Select Attack Type</h3>
+                <div class="attack-grid">
+                    <button class="atk-btn" onclick="selectAttack(this, 'xss')">XSS</button>
+                    <button class="atk-btn" onclick="selectAttack(this, 'sqli')">SQL Injection</button>
+                    <button class="atk-btn" onclick="selectAttack(this, 'path')">Path Traversal</button>
+                    <button class="atk-btn" onclick="selectAttack(this, 'cmd')">Command Injection</button>
+                    <button class="atk-btn" onclick="selectAttack(this, 'lfi')">LFI</button>
+                    <button class="atk-btn" onclick="selectAttack(this, 'xxe')">XXE</button>
+                    <button class="atk-btn" onclick="selectAttack(this, 'safe')">Safe Input</button>
+                </div>
+            </section>
+
+            <!-- SECTION 3: Payload Input -->
+            <section>
+                <h3>3. Payload</h3>
+                <textarea id="payload-input" rows="4"
+                    placeholder="Select an attack above, or type your own payload here..."></textarea>
+            </section>
+
+            <!-- SECTION 4: Action Buttons -->
+            <div class="action-row">
+                <button id="inject-btn" onclick="injectAndAnalyze()">Inject &amp; Analyze</button>
+                <button id="reset-btn" class="secondary" onclick="resetAll()">Reset</button>
+            </div>
+
+            <!-- Status Message -->
+            <p id="status-msg" class="status-msg" style="display:none;"></p>
+
+            <!-- SECTION 5: Log Box -->
+            <section>
+                <h3>4. Activity Log</h3>
+                <div id="log-box">
+                    <span class="log-empty">No activity yet.</span>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>Cyber Gate — Security Analysis Platform | Intrusion Detection System</p>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

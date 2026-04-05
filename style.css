@@ -1,0 +1,455 @@
+/* =============================================
+   Cyber Gate – Security Analysis Platform
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+
+/* --- Reset & Base --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    color: #111111;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* --- Header --- */
+header {
+    background: #f0f0f0;
+    border-bottom: 1px solid #cccccc;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header h1 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* --- Main Content Area --- */
+main {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* --- Sections --- */
+section {
+    margin-bottom: 28px;
+}
+
+section h3 {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #dddddd;
+    padding-bottom: 4px;
+}
+
+/* --- LOGIN PAGE --- */
+#login-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f7f7f7;
+}
+
+.cyber-gate-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: 10px;
+    color: #111111;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.login-box {
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 32px;
+    width: 340px;
+}
+
+.login-box h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.login-box .subtitle {
+    font-size: 13px;
+    color: #666666;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #bbbbbb;
+    font-size: 14px;
+    background: #fafafa;
+}
+
+.error-msg {
+    color: #cc0000;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+/* --- Hint text --- */
+.hint-text {
+    font-size: 12px;
+    color: #888888;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    background: #fffde7;
+    border: 1px solid #e0d97e;
+}
+
+/* --- BUTTONS --- */
+button {
+    padding: 8px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid #999999;
+    background: #eeeeee;
+    color: #111111;
+}
+
+button:hover {
+    background: #dddddd;
+}
+
+/* Primary action button */
+#inject-btn {
+    background: #111111;
+    color: #ffffff;
+    border: 1px solid #111111;
+}
+
+#inject-btn:hover {
+    background: #333333;
+}
+
+/* Secondary / Reset button */
+.secondary {
+    background: #ffffff;
+    color: #333333;
+    border: 1px solid #aaaaaa;
+}
+
+/* Toggle buttons for target selector */
+.toggle-btn {
+    background: #eeeeee;
+    border: 1px solid #aaaaaa;
+    margin-right: 8px;
+}
+
+.toggle-btn.active {
+    background: #333333;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+/* Attack type buttons */
+.attack-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.atk-btn {
+    background: #f5f5f5;
+    border: 1px solid #aaaaaa;
+    font-size: 13px;
+    padding: 6px 14px;
+}
+
+.atk-btn.selected {
+    background: #333333;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+.button-row,
+.action-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+/* --- Status Message --- */
+.status-msg {
+    font-size: 13px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    border: 1px solid #dddddd;
+}
+
+.status-error {
+    background: #fff0f0;
+    border-color: #cc0000;
+    color: #cc0000;
+}
+
+.status-ok {
+    background: #f0fff0;
+    border-color: #007700;
+    color: #007700;
+}
+
+/* --- Simulated Login Form Preview --- */
+.sim-form {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f5f5f5;
+    border: 1px solid #dddddd;
+}
+
+.sim-label {
+    font-size: 12px;
+    color: #666666;
+    margin-bottom: 8px;
+}
+
+.sim-form input {
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 6px 8px;
+    border: 1px solid #cccccc;
+    background: #ffffff;
+    font-size: 13px;
+    color: #333333;
+}
+
+/* --- Payload Textarea --- */
+#payload-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #bbbbbb;
+    font-family: monospace;
+    font-size: 13px;
+    background: #fafafa;
+    resize: vertical;
+}
+
+/* --- Log Box --- */
+#log-box {
+    background: #f5f5f5;
+    border: 1px solid #dddddd;
+    padding: 10px 12px;
+    min-height: 80px;
+    font-size: 12px;
+    font-family: monospace;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.log-empty {
+    color: #888888;
+}
+
+.log-row {
+    margin-bottom: 4px;
+    border-bottom: 1px dotted #dddddd;
+    padding-bottom: 4px;
+    word-break: break-all;
+}
+
+.log-ts {
+    color: #888888;
+    margin-right: 6px;
+}
+
+.log-blocked {
+    color: #cc0000;
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+.log-allowed {
+    color: #007700;
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    font-size: 12px;
+    color: #888888;
+    padding: 20px;
+    border-top: 1px solid #eeeeee;
+    margin-top: 40px;
+}
+
+
+/* =============================================
+   ANALYSIS PAGE (analysis.html)
+   ============================================= */
+
+/* No-data guard box */
+.guard-box {
+    text-align: center;
+    padding: 60px 30px;
+}
+
+.guard-box h2 {
+    font-size: 20px;
+    color: #cc6600;
+    margin-bottom: 10px;
+}
+
+.guard-box p {
+    font-size: 14px;
+    color: #555555;
+    margin-bottom: 10px;
+}
+
+.guard-box button {
+    margin-top: 16px;
+}
+
+/* Report timestamp */
+.report-timestamp {
+    font-size: 12px;
+    color: #888888;
+    margin-bottom: 16px;
+}
+
+/* Verdict Box at the top of report */
+.verdict-box {
+    padding: 16px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    border: 2px solid #cccccc;
+    text-align: center;
+}
+
+.verdict-box.blocked {
+    background: #fff0f0;
+    border-color: #cc0000;
+    color: #cc0000;
+}
+
+.verdict-box.allowed {
+    background: #f0fff0;
+    border-color: #007700;
+    color: #007700;
+}
+
+/* Simple table for report details */
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+
+.report-table td {
+    padding: 8px 12px;
+    border: 1px solid #dddddd;
+    font-size: 13px;
+    vertical-align: top;
+}
+
+.report-table thead td {
+    background: #e8e8e8;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.report-table td:first-child {
+    background: #f5f5f5;
+    width: 180px;
+}
+
+.report-table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* Sanitization boxes */
+.sanitize-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.sanitize-box>div {
+    flex: 1;
+    min-width: 200px;
+}
+
+.arrow {
+    font-size: 22px;
+    padding-top: 28px;
+    color: #666666;
+}
+
+.code-box {
+    background: #f5f5f5;
+    border: 1px solid #dddddd;
+    padding: 8px 10px;
+    font-family: monospace;
+    font-size: 13px;
+    word-break: break-all;
+    min-height: 40px;
+}
+
+.code-box.safe {
+    background: #f0fff0;
+    border-color: #aaddaa;
+}
+
+/* Lists on analysis page */
+#r-prevention li {
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+/* Responsive adjustment */
+@media (max-width: 600px) {
+    main {
+        padding: 0 12px;
+    }
+
+    .sanitize-box {
+        flex-direction: column;
+    }
+
+    .arrow {
+        transform: rotate(90deg);
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    .report-table td:first-child {
+        width: 120px;
+    }
+}

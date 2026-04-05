@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="IDS Analysis Report — detailed breakdown of detected attack, matched rules, sanitization, and prevention tips." />
+    <title>Analysis Report – Cyber Gate</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <header>
+        <h1>IDS Analysis Report</h1>
+        <button onclick="window.location.href='index.html'">← Back to Dashboard</button>
+    </header>
+
+    <main id="report-page">
+
+        <!-- No Data Guard (Bug #7) — shown if navigated directly -->
+        <div id="no-data-guard" style="display:none;">
+            <div class="guard-box">
+                <h2>⚠ No Analysis Data Found</h2>
+                <p>You must run an analysis from the Dashboard first.</p>
+                <p>Go back, select an attack type, enter a payload, and click <strong>Inject &amp; Analyze</strong>.</p>
+                <button onclick="window.location.href='index.html'">← Go to Dashboard</button>
+            </div>
+        </div>
+
+        <!-- Report Content (hidden until data loads) -->
+        <div id="report-content" style="display:none;">
+
+            <!-- Verdict Banner -->
+            <div id="verdict-box" class="verdict-box">
+                <span id="verdict-label">Loading...</span>
+            </div>
+
+            <!-- Timestamp -->
+            <p id="r-timestamp" class="report-timestamp"></p>
+
+            <!-- Attack Details Table -->
+            <section>
+                <h3>Attack Details</h3>
+                <table class="report-table">
+                    <tr>
+                        <td><strong>Attack Type</strong></td>
+                        <td id="r-attack-type">—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Target Field</strong></td>
+                        <td id="r-target">—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Threat Score</strong></td>
+                        <td id="r-score">—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IDS Decision</strong></td>
+                        <td id="r-decision">—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MITRE ATT&amp;CK</strong></td>
+                        <td id="r-mitre">—</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Why Detected -->
+            <section>
+                <h3>Why Was It Detected?</h3>
+                <p id="r-why">—</p>
+            </section>
+
+            <!-- Matched Rules -->
+            <section>
+                <h3>Matched Rules</h3>
+                <table class="report-table" id="rules-table">
+                    <thead>
+                        <tr>
+                            <td><strong>Rule ID</strong></td>
+                            <td><strong>Description</strong></td>
+                            <td><strong>Type</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody id="r-rules-body">
+                    </tbody>
+                </table>
+                <p id="r-no-rules" style="display:none;">No malicious signature rules matched.</p>
+            </section>
+
+            <!-- Anomaly Indicators -->
+            <section>
+                <h3>Anomaly Indicators</h3>
+                <table class="report-table">
+                    <tr>
+                        <td><strong>Payload Length</strong></td>
+                        <td id="r-length">—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Special Characters</strong></td>
+                        <td id="r-specials">—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Entropy</strong></td>
+                        <td id="r-entropy">—</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Defense-in-Depth Layers -->
+            <section>
+                <h3>Defense-in-Depth Layers</h3>
+                <table class="report-table" id="layers-table">
+                    <thead>
+                        <tr>
+                            <td><strong>Layer</strong></td>
+                            <td><strong>Status</strong></td>
+                            <td><strong>Detail</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody id="r-layers-body">
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- How to Prevent -->
+            <section>
+                <h3>How to Prevent This Attack</h3>
+                <ul id="r-prevention"></ul>
+            </section>
+
+            <!-- Input Sanitization -->
+            <section>
+                <h3>Input Sanitization (Before → After)</h3>
+                <div class="sanitize-box">
+                    <div>
+                        <p><strong>Original Input:</strong></p>
+                        <div class="code-box" id="r-original">—</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div>
+                        <p><strong>Sanitized Output:</strong></p>
+                        <div class="code-box safe" id="r-sanitized">—</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="action-row">
+                <button onclick="window.location.href='index.html'">← Back to Dashboard</button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        <p>Cyber Gate — Security Analysis Platform | Intrusion Detection System</p>
+    </footer>
+
+    <script>
+        // ─────────────────────────────────────────
+        // ANALYSIS PAGE SCRIPT
+        // Reads localStorage data and populates report
+        // Includes navigation guard (Bug #7 fix)
+        // ─────────────────────────────────────────
+
+        window.addEventListener("DOMContentLoaded", function () {
+            var raw = localStorage.getItem("ids_result");
+
+            // Navigation guard: if no data, show warning (Bug #7)
+            if (!raw) {
+                document.getElementById("no-data-guard").style.display = "block";
+                document.getElementById("report-content").style.display = "none";
+                return;
+            }
+
+            var result;
+            try {
+                result = JSON.parse(raw);
+            } catch (e) {
+                document.getElementById("no-data-guard").style.display = "block";
+                document.getElementById("report-content").style.display = "none";
+                return;
+            }
+
+            // Show report, hide guard
+            document.getElementById("no-data-guard").style.display = "none";
+            document.getElementById("report-content").style.display = "block";
+
+            // ── Verdict Banner ──
+            var verdictBox = document.getElementById("verdict-box");
+            var verdictLabel = document.getElementById("verdict-label");
+
+            if (result.blocked) {
+                verdictBox.classList.add("blocked");
+                verdictLabel.textContent = "BLOCKED — Threat Detected";
+            } else {
+                verdictBox.classList.add("allowed");
+                verdictLabel.textContent = "ALLOWED — Safe Input";
+            }
+
+            // ── Timestamp ──
+            if (result.timestamp) {
+                var ts = new Date(result.timestamp);
+                document.getElementById("r-timestamp").textContent =
+                    "Analysis performed: " + ts.toLocaleString();
+            }
+
+            // ── Attack Details Table ──
+            document.getElementById("r-attack-type").textContent = result.attackType || "—";
+            document.getElementById("r-target").textContent = result.target || "—";
+            document.getElementById("r-score").textContent = (result.score || 0) + " / 100";
+            document.getElementById("r-decision").textContent = result.decision || (result.blocked ? "BLOCKED" : "ALLOWED");
+            document.getElementById("r-mitre").textContent = result.mitre || "N/A";
+
+            // Style the decision cell
+            var decisionCell = document.getElementById("r-decision");
+            if (result.blocked) {
+                decisionCell.style.color = "#cc0000";
+                decisionCell.style.fontWeight = "bold";
+            } else {
+                decisionCell.style.color = "#007700";
+                decisionCell.style.fontWeight = "bold";
+            }
+
+            // ── Why Detected ──
+            document.getElementById("r-why").textContent = result.whyDetected || "No detection reason available.";
+
+            // ── Matched Rules Table ──
+            var rulesBody = document.getElementById("r-rules-body");
+            var noRulesMsg = document.getElementById("r-no-rules");
+
+            if (result.rules && result.rules.length > 0) {
+                noRulesMsg.style.display = "none";
+                result.rules.forEach(function (rule) {
+                    var tr = document.createElement("tr");
+
+                    var tdId = document.createElement("td");
+                    tdId.textContent = rule.id || "—";
+                    tr.appendChild(tdId);
+
+                    var tdDesc = document.createElement("td");
+                    tdDesc.textContent = rule.desc || "—";
+                    tr.appendChild(tdDesc);
+
+                    var tdType = document.createElement("td");
+                    tdType.textContent = rule.type || "—";
+                    tr.appendChild(tdType);
+
+                    rulesBody.appendChild(tr);
+                });
+            } else {
+                noRulesMsg.style.display = "block";
+                document.getElementById("rules-table").style.display = "none";
+            }
+
+            // ── Anomaly Indicators ──
+            var origPayload = result.originalPayload || "";
+            document.getElementById("r-length").textContent = origPayload.length + " characters";
+            document.getElementById("r-specials").textContent = (result.specialChars || 0) + " special character(s)";
+            document.getElementById("r-entropy").textContent = (result.entropy || 0) + " bits/char" +
+                (result.entropy > 4.5 ? " (HIGH — possible obfuscation)" :
+                 result.entropy > 3.0 ? " (MODERATE)" : " (LOW — normal)");
+
+            // ── Defense-in-Depth Layers ──
+            var layersBody = document.getElementById("r-layers-body");
+            if (result.layers && result.layers.length > 0) {
+                result.layers.forEach(function (layer) {
+                    var tr = document.createElement("tr");
+
+                    var tdName = document.createElement("td");
+                    tdName.textContent = layer.name;
+                    tr.appendChild(tdName);
+
+                    var tdStatus = document.createElement("td");
+                    tdStatus.textContent = layer.status;
+                    // Color-code the status
+                    if (layer.status === "BLOCKED" || layer.status === "THROTTLED") {
+                        tdStatus.style.color = "#cc0000";
+                        tdStatus.style.fontWeight = "bold";
+                    } else if (layer.status === "FLAGGED" || layer.status === "MODIFIED") {
+                        tdStatus.style.color = "#cc6600";
+                        tdStatus.style.fontWeight = "bold";
+                    } else {
+                        tdStatus.style.color = "#007700";
+                        tdStatus.style.fontWeight = "bold";
+                    }
+                    tr.appendChild(tdStatus);
+
+                    var tdDetail = document.createElement("td");
+                    tdDetail.textContent = layer.detail;
+                    tr.appendChild(tdDetail);
+
+                    layersBody.appendChild(tr);
+                });
+            }
+
+            // ── Prevention Tips ──
+            var prevList = document.getElementById("r-prevention");
+            if (result.prevention && result.prevention.length > 0) {
+                result.prevention.forEach(function (tip) {
+                    var li = document.createElement("li");
+                    li.textContent = tip;
+                    prevList.appendChild(li);
+                });
+            } else {
+                prevList.innerHTML = "<li>No specific prevention tips available.</li>";
+            }
+
+            // ── Sanitization ──
+            document.getElementById("r-original").textContent = result.originalPayload || "—";
+            document.getElementById("r-sanitized").textContent = result.sanitizedPayload || "—";
+        });
+    </script>
+
+</body>
+
+</html>
